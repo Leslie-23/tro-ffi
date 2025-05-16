@@ -1,75 +1,257 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { BusCard } from "@/components/ui/BusCard";
+import { RouteCard } from "@/components/ui/RouteCard";
+import { SafetyFeatures } from "@/components/ui/SafetyFeatures";
+import { colors } from "@/constants/colors";
+import { mockBuses } from "@/mocks/data";
+import { useAuthStore } from "@/store/auth-store";
+import { useBookingStore } from "@/store/booking-store";
+import { useRouteStore } from "@/store/route-store";
+import { useRouter } from "expo-router";
+import { Bus as BusIcon, Calendar, MapPin, Search } from "lucide-react-native";
+import React, { useEffect } from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const { user } = useAuthStore();
+  const { popularRoutes, fetchRoutes } = useRouteStore();
+  const { activeBooking, fetchBookings } = useBookingStore();
+
+  useEffect(() => {
+    fetchRoutes();
+    fetchBookings();
+  }, [fetchRoutes, fetchBookings]);
+
+  const handleRoutePress = (routeId: string) => {
+    router.push(`/route-details/${routeId}`);
+  };
+
+  const handleSearchPress = () => {
+    router.push("/search");
+  };
+
+  const handleActiveBookingPress = () => {
+    if (activeBooking) {
+      router.push(`/booking-details/${activeBooking.id}`);
+    }
+  };
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
+      {/* Header with user greeting */}
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.greeting}>
+            Hello, {user?.name?.split(" ")[0] || "Guest"}
+          </Text>
+          <Text style={styles.subGreeting}>Where are you going today?</Text>
+        </View>
+        {user?.profileImage && (
+          <Image
+            source={{ uri: user.profileImage }}
+            style={styles.profileImage}
+          />
+        )}
+      </View>
+
+      {/* Search bar */}
+      <TouchableOpacity style={styles.searchBar} onPress={handleSearchPress}>
+        <Search size={20} color={colors.grey} />
+        <Text style={styles.searchText}>Search for routes or destinations</Text>
+      </TouchableOpacity>
+
+      {/* Active booking card */}
+      {activeBooking && (
+        <TouchableOpacity
+          style={styles.activeBookingCard}
+          onPress={handleActiveBookingPress}
+        >
+          <View style={styles.activeBookingHeader}>
+            <Text style={styles.activeBookingTitle}>Active Booking</Text>
+            <View style={styles.statusContainer}>
+              <View style={styles.statusDot} />
+              <Text style={styles.statusText}>{activeBooking.status}</Text>
+            </View>
+          </View>
+
+          <View style={styles.bookingDetails}>
+            <View style={styles.bookingDetail}>
+              <MapPin size={16} color={colors.primary} />
+              <Text style={styles.bookingDetailText}>
+                {activeBooking.pickupLocation.name}
+              </Text>
+            </View>
+
+            <View style={styles.bookingDetail}>
+              <Calendar size={16} color={colors.primary} />
+              <Text style={styles.bookingDetailText}>
+                {formatTime(activeBooking.pickupTime)}
+              </Text>
+            </View>
+
+            <View style={styles.bookingDetail}>
+              <BusIcon size={16} color={colors.primary} />
+              <Text style={styles.bookingDetailText}>
+                Bus #{activeBooking.busId}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+
+      {/* Safety features */}
+      <SafetyFeatures />
+
+      {/* Popular routes section */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Popular Routes</Text>
+        <TouchableOpacity onPress={() => router.push("/search")}>
+          <Text style={styles.seeAllText}>See All</Text>
+        </TouchableOpacity>
+      </View>
+
+      {popularRoutes.map((route) => (
+        <RouteCard
+          key={route.id}
+          route={route}
+          onPress={() => handleRoutePress(route.id)}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      ))}
+
+      {/* Available buses section */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Available Buses</Text>
+        <TouchableOpacity>
+          <Text style={styles.seeAllText}>See All</Text>
+        </TouchableOpacity>
+      </View>
+
+      {mockBuses
+        .filter((bus) => bus.status === "active")
+        .slice(0, 2)
+        .map((bus) => (
+          <BusCard key={bus.id} bus={bus} />
+        ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  contentContainer: {
+    padding: 16,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  greeting: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: colors.text,
+  },
+  subGreeting: {
+    fontSize: 16,
+    color: colors.grey,
+    marginTop: 4,
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 24,
+  },
+  searchText: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: colors.grey,
+  },
+  activeBookingCard: {
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+  },
+  activeBookingHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  activeBookingTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: colors.text,
+  },
+  statusContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.primary,
+    marginRight: 6,
+  },
+  statusText: {
+    fontSize: 14,
+    color: colors.text,
+    textTransform: "capitalize",
+  },
+  bookingDetails: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  bookingDetail: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  bookingDetailText: {
+    fontSize: 14,
+    color: colors.text,
+    marginLeft: 6,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.text,
+  },
+  seeAllText: {
+    fontSize: 14,
+    color: colors.primary,
   },
 });
