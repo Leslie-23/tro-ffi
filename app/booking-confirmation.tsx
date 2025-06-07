@@ -176,7 +176,7 @@ export default function BookingConfirmationScreen() {
         <View style={styles.fareItem}>
           <Text style={styles.fareItemLabel}>Base Fare</Text>
           <Text style={styles.fareItemValue}>
-            KES {selectedRoute.fare.current}
+            GHS {selectedRoute.fare.current}
           </Text>
         </View>
 
@@ -195,7 +195,7 @@ export default function BookingConfirmationScreen() {
         <View style={styles.totalFare}>
           <Text style={styles.totalFareLabel}>Total</Text>
           <Text style={styles.totalFareValue}>
-            KES {isGroupBooking ? totalFare * 0.9 : totalFare}
+            GHS {isGroupBooking ? totalFare * 0.9 : totalFare}
           </Text>
         </View>
       </Card>

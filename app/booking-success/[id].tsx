@@ -143,7 +143,7 @@ export default function BookingSuccessScreen() {
 
         <View style={styles.fareContainer}>
           <Text style={styles.fareLabel}>Total Fare</Text>
-          <Text style={styles.fareAmount}>KES {activeBooking.fare}</Text>
+          <Text style={styles.fareAmount}>GHS {activeBooking.fare}</Text>
         </View>
 
         <View style={styles.paymentStatus}>

@@ -12,11 +12,13 @@ import React, { useEffect } from "react";
 import {
   Image,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -49,105 +51,115 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    >
-      {/* Header with user greeting */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.greeting}>
-            Hello, {user?.name?.split(" ")[0] || "Guest"}
-          </Text>
-          <Text style={styles.subGreeting}>Where are you going today?</Text>
-        </View>
-        {user?.profileImage && (
-          <Image
-            source={{ uri: user.profileImage }}
-            style={styles.profileImage}
-          />
-        )}
-      </View>
-
-      {/* Search bar */}
-      <TouchableOpacity style={styles.searchBar} onPress={handleSearchPress}>
-        <Search size={20} color={colors.grey} />
-        <Text style={styles.searchText}>Search for routes or destinations</Text>
-      </TouchableOpacity>
-
-      {/* Active booking card */}
-      {activeBooking && (
-        <TouchableOpacity
-          style={styles.activeBookingCard}
-          onPress={handleActiveBookingPress}
+    <>
+      <SafeAreaView edges={["top"]} style={styles.safeArea}>
+        <StatusBar barStyle={"default"} />
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
         >
-          <View style={styles.activeBookingHeader}>
-            <Text style={styles.activeBookingTitle}>Active Booking</Text>
-            <View style={styles.statusContainer}>
-              <View style={styles.statusDot} />
-              <Text style={styles.statusText}>{activeBooking.status}</Text>
+          {/* Header with user greeting */}
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.greeting}>
+                Hello, {user?.name?.split(" ")[0] || "Guest"}
+              </Text>
+              <Text style={styles.subGreeting}>Where are you going today?</Text>
             </View>
+            {user?.profileImage && (
+              <Image
+                source={{ uri: user.profileImage }}
+                style={styles.profileImage}
+              />
+            )}
           </View>
 
-          <View style={styles.bookingDetails}>
-            <View style={styles.bookingDetail}>
-              <MapPin size={16} color={colors.primary} />
-              <Text style={styles.bookingDetailText}>
-                {activeBooking.pickupLocation.name}
-              </Text>
-            </View>
+          {/* Search bar */}
+          <TouchableOpacity
+            style={styles.searchBar}
+            onPress={handleSearchPress}
+          >
+            <Search size={20} color={colors.grey} />
+            <Text style={styles.searchText}>
+              Search for routes or destinations
+            </Text>
+          </TouchableOpacity>
 
-            <View style={styles.bookingDetail}>
-              <Calendar size={16} color={colors.primary} />
-              <Text style={styles.bookingDetailText}>
-                {formatTime(activeBooking.pickupTime)}
-              </Text>
-            </View>
+          {/* Active booking card */}
+          {activeBooking && (
+            <TouchableOpacity
+              style={styles.activeBookingCard}
+              onPress={handleActiveBookingPress}
+            >
+              <View style={styles.activeBookingHeader}>
+                <Text style={styles.activeBookingTitle}>Active Booking</Text>
+                <View style={styles.statusContainer}>
+                  <View style={styles.statusDot} />
+                  <Text style={styles.statusText}>{activeBooking.status}</Text>
+                </View>
+              </View>
 
-            <View style={styles.bookingDetail}>
-              <BusIcon size={16} color={colors.primary} />
-              <Text style={styles.bookingDetailText}>
-                Bus #{activeBooking.busId}
-              </Text>
-            </View>
+              <View style={styles.bookingDetails}>
+                <View style={styles.bookingDetail}>
+                  <MapPin size={16} color={colors.primary} />
+                  <Text style={styles.bookingDetailText}>
+                    {activeBooking.pickupLocation.name}
+                  </Text>
+                </View>
+
+                <View style={styles.bookingDetail}>
+                  <Calendar size={16} color={colors.primary} />
+                  <Text style={styles.bookingDetailText}>
+                    {formatTime(activeBooking.pickupTime)}
+                  </Text>
+                </View>
+
+                <View style={styles.bookingDetail}>
+                  <BusIcon size={16} color={colors.primary} />
+                  <Text style={styles.bookingDetailText}>
+                    Bus #{activeBooking.busId}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+
+          {/* Safety features */}
+          <SafetyFeatures />
+
+          {/* Popular routes section */}
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Popular Routes</Text>
+            <TouchableOpacity onPress={() => router.push("/search")}>
+              <Text style={styles.seeAllText}>See All</Text>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-      )}
 
-      {/* Safety features */}
-      <SafetyFeatures />
+          {popularRoutes.map((route) => (
+            <RouteCard
+              key={route.id}
+              route={route}
+              onPress={() => handleRoutePress(route.id)}
+            />
+          ))}
 
-      {/* Popular routes section */}
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Popular Routes</Text>
-        <TouchableOpacity onPress={() => router.push("/search")}>
-          <Text style={styles.seeAllText}>See All</Text>
-        </TouchableOpacity>
-      </View>
+          {/* Available buses section */}
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Available Buses</Text>
+            <TouchableOpacity>
+              <Text style={styles.seeAllText}>See All</Text>
+            </TouchableOpacity>
+          </View>
 
-      {popularRoutes.map((route) => (
-        <RouteCard
-          key={route.id}
-          route={route}
-          onPress={() => handleRoutePress(route.id)}
-        />
-      ))}
-
-      {/* Available buses section */}
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Available Buses</Text>
-        <TouchableOpacity>
-          <Text style={styles.seeAllText}>See All</Text>
-        </TouchableOpacity>
-      </View>
-
-      {mockBuses
-        .filter((bus) => bus.status === "active")
-        .slice(0, 2)
-        .map((bus) => (
-          <BusCard key={bus.id} bus={bus} />
-        ))}
-    </ScrollView>
+          {mockBuses
+            .filter((bus) => bus.status === "active")
+            .slice(0, 2)
+            .map((bus) => (
+              <BusCard key={bus.id} bus={bus} />
+            ))}
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -253,5 +265,8 @@ const styles = StyleSheet.create({
   seeAllText: {
     fontSize: 14,
     color: colors.primary,
+  },
+  safeArea: {
+    flex: 1,
   },
 });

@@ -11,12 +11,18 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export default function SearchScreen() {
   const router = useRouter();
@@ -41,6 +47,7 @@ export default function SearchScreen() {
     dropoff: "",
     date: "",
   });
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   useEffect(() => {
     if (locations.length === 0) {
@@ -89,89 +96,150 @@ export default function SearchScreen() {
     }
   };
 
+  // Date picker handlers
+  const showDatePicker = () => {
+    Keyboard.dismiss();
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleDateConfirm = (date: Date) => {
+    setSelectedDate(date);
+    hideDatePicker();
+  };
+
+  // Location input handlers
+  const handleLocationSelect = (location: any, type: "pickup" | "dropoff") => {
+    if (type === "pickup") {
+      setSelectedPickup(location);
+    } else {
+      setSelectedDropoff(location);
+    }
+    Keyboard.dismiss();
+  };
+
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Text style={styles.title}>Find Your Route</Text>
-
-      <View style={styles.searchForm}>
-        <LocationInput
-          label="From"
-          placeholder="Select pickup location"
-          value={selectedPickup}
-          onChange={setSelectedPickup}
-          error={errors.pickup}
-        />
-
-        <LocationInput
-          label="To"
-          placeholder="Select destination"
-          value={selectedDropoff}
-          onChange={setSelectedDropoff}
-          error={errors.dropoff}
-        />
-
-        <DateTimePicker
-          label="Departure Time"
-          value={selectedDate}
-          onChange={setSelectedDate}
-          error={errors.date}
-        />
-
-        <PassengerCounter
-          label="Passengers"
-          value={passengerCount}
-          onChange={setPassengerCount}
-          min={isGroupBooking ? 5 : 1}
-        />
-
-        <TouchableOpacity
-          style={styles.groupBookingToggle}
-          onPress={handleGroupBookingToggle}
-        >
-          <View
-            style={[styles.checkbox, isGroupBooking && styles.checkboxChecked]}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={styles.safeArea}>
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.contentContainer}
+            keyboardShouldPersistTaps="handled"
+            stickyHeaderIndices={[0]}
           >
-            {isGroupBooking && <View style={styles.checkmark} />}
-          </View>
-          <Text style={styles.groupBookingText}>
-            Group Booking (5+ passengers)
-          </Text>
-        </TouchableOpacity>
+            {/* Search Form at the Top */}
+            <View style={styles.searchForm}>
+              <Text style={styles.title}>Find Your Route</Text>
 
-        <Button
-          title="Search Routes"
-          onPress={handleSearch}
-          isLoading={isSearching}
-          fullWidth
-          style={styles.searchButton}
-        />
-      </View>
+              <LocationInput
+                label="From"
+                placeholder="Select pickup location"
+                value={selectedPickup}
+                onChange={(location) =>
+                  handleLocationSelect(location, "pickup")
+                }
+                error={errors.pickup}
+                onSubmitEditing={() => Keyboard.dismiss()}
+              />
 
-      {isSearching ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={styles.loadingText}>Searching for routes...</Text>
-        </View>
-      ) : searchResults.length > 0 ? (
-        <View style={styles.resultsContainer}>
-          <Text style={styles.resultsTitle}>Search Results</Text>
-          {searchResults.map((route) => (
-            <RouteCard
-              key={route.id}
-              route={route}
-              onPress={handleRouteSelect}
-            />
-          ))}
-        </View>
-      ) : null}
-    </ScrollView>
+              <LocationInput
+                label="To"
+                placeholder="Select destination"
+                value={selectedDropoff}
+                onChange={(location) =>
+                  handleLocationSelect(location, "dropoff")
+                }
+                error={errors.dropoff}
+                onSubmitEditing={() => Keyboard.dismiss()}
+              />
+
+              <TouchableOpacity onPress={showDatePicker}>
+                <DateTimePicker
+                  label="Departure Time"
+                  value={selectedDate}
+                  editable={false}
+                  error={errors.date}
+                />
+              </TouchableOpacity>
+
+              <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="datetime"
+                onConfirm={handleDateConfirm}
+                onCancel={hideDatePicker}
+                minimumDate={new Date()}
+              />
+
+              <PassengerCounter
+                label="Passengers"
+                value={passengerCount}
+                onChange={setPassengerCount}
+                min={isGroupBooking ? 5 : 1}
+              />
+
+              <TouchableOpacity
+                style={styles.groupBookingToggle}
+                onPress={handleGroupBookingToggle}
+              >
+                <View
+                  style={[
+                    styles.checkbox,
+                    isGroupBooking && styles.checkboxChecked,
+                  ]}
+                >
+                  {isGroupBooking && <View style={styles.checkmark} />}
+                </View>
+                <Text style={styles.groupBookingText}>
+                  Group Booking (5+ passengers)
+                </Text>
+              </TouchableOpacity>
+
+              <Button
+                title="Search Routes"
+                onPress={handleSearch}
+                isLoading={isSearching}
+                fullWidth
+                style={styles.searchButton}
+              />
+            </View>
+
+            {/* Results Section Below */}
+            {isSearching ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={colors.primary} />
+                <Text style={styles.loadingText}>Searching for routes...</Text>
+              </View>
+            ) : searchResults.length > 0 ? (
+              <View style={styles.resultsContainer}>
+                <Text style={styles.resultsTitle}>Search Results</Text>
+                {searchResults.map((route) => (
+                  <RouteCard
+                    key={route.id}
+                    route={route}
+                    onPress={handleRouteSelect}
+                  />
+                ))}
+              </View>
+            ) : null}
+          </ScrollView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -183,10 +251,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: colors.text,
-    marginBottom: 24,
+    marginBottom: 16,
   },
   searchForm: {
-    marginBottom: 24,
+    backgroundColor: colors.background,
+    paddingBottom: 16,
+    marginBottom: 8,
+    zIndex: 1,
   },
   groupBookingToggle: {
     flexDirection: "row",

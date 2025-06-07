@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -104,40 +105,42 @@ export default function NotificationsScreen() {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Notifications</Text>
+    <SafeAreaView edges={["top"]} style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Notifications</Text>
 
-        {unreadCount > 0 && (
-          <TouchableOpacity onPress={markAllAsRead}>
-            <Text style={styles.markAllText}>Mark all as read</Text>
-          </TouchableOpacity>
+          {unreadCount > 0 && (
+            <TouchableOpacity onPress={markAllAsRead}>
+              <Text style={styles.markAllText}>Mark all as read</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Text style={styles.loadingText}>Loading notifications...</Text>
+          </View>
+        ) : notifications.length > 0 ? (
+          <FlatList
+            data={notifications}
+            renderItem={renderNotificationItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContent}
+          />
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Bell size={60} color={colors.inactive} />
+            <Text style={styles.emptyTitle}>No notifications</Text>
+            <Text style={styles.emptyText}>
+              You don't have any notifications yet. We'll notify you about your
+              bookings and important updates.
+            </Text>
+          </View>
         )}
       </View>
-
-      {isLoading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={styles.loadingText}>Loading notifications...</Text>
-        </View>
-      ) : notifications.length > 0 ? (
-        <FlatList
-          data={notifications}
-          renderItem={renderNotificationItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContent}
-        />
-      ) : (
-        <View style={styles.emptyContainer}>
-          <Bell size={60} color={colors.inactive} />
-          <Text style={styles.emptyTitle}>No notifications</Text>
-          <Text style={styles.emptyText}>
-            You don't have any notifications yet. We'll notify you about your
-            bookings and important updates.
-          </Text>
-        </View>
-      )}
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -240,5 +243,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.inactive,
     textAlign: "center",
+  },
+  safeArea: {
+    flex: 1,
+    // backgroundColor: colors.background,
   },
 });

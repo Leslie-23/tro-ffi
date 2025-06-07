@@ -98,7 +98,7 @@ export const BookingCard: React.FC<BookingCardProps> = ({
         <View style={styles.footer}>
           <View>
             <Text style={styles.fareLabel}>Fare</Text>
-            <Text style={styles.fareAmount}>KES {booking.fare}</Text>
+            <Text style={styles.fareAmount}>GHS {booking.fare}</Text>
           </View>
 
           {booking.isGroupBooking && (

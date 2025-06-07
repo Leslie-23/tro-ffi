@@ -85,7 +85,7 @@ export default function RouteDetailsScreen() {
   };
 
   const formatCurrency = (amount: number) => {
-    return `KES ${amount}`;
+    return `GHS ${amount}`;
   };
 
   const formatTime = (timeString: string) => {

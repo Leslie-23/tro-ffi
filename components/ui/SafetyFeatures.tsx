@@ -1,5 +1,12 @@
 import { colors } from "@/constants/colors";
-import { AlertTriangle, Bell, Phone, Shield, X } from "lucide-react-native";
+import {
+  AlertTriangle,
+  Bell,
+  MapPin,
+  Phone,
+  Shield,
+  X,
+} from "lucide-react-native";
 import React, { useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "./Button";
@@ -73,7 +80,7 @@ export const SafetyFeatures: React.FC = () => {
                   // In a real app, this would initiate a call
                   setSosPanelVisible(false);
                 }}
-                style={styles.sosButton}
+                style={styles.sosButtonInModal}
                 leftIcon={<Phone size={20} color={colors.white} />}
                 fullWidth
               />
@@ -84,7 +91,8 @@ export const SafetyFeatures: React.FC = () => {
                   // In a real app, this would share location
                   setSosPanelVisible(false);
                 }}
-                style={styles.sosButton}
+                style={styles.sosButtonInModal}
+                leftIcon={<MapPin size={20} color={colors.white} />}
                 fullWidth
               />
 
@@ -92,7 +100,15 @@ export const SafetyFeatures: React.FC = () => {
                 title="Cancel"
                 variant="outline"
                 onPress={() => setSosPanelVisible(false)}
-                style={styles.sosButton}
+                style={styles.sosButtonInModal}
+                textStyle={{ color: colors.white, fontWeight: "800" }}
+                leftIcon={
+                  <X
+                    size={20}
+                    color={colors.white}
+                    style={{ alignContent: "center" }}
+                  />
+                }
                 fullWidth
               />
             </View>
@@ -135,6 +151,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.error,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 8,
+  },
+  sosButtonInModal: {
+    width: 300,
+    height: 60,
+    borderRadius: 30,
+    display: "flex",
+    backgroundColor: colors.error,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
     marginBottom: 8,
   },
   featureIcon: {

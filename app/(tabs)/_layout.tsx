@@ -29,12 +29,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Home size={22} color={color} />,
           headerShown: false,
         }}
+        // options={{ headerShown: false }}
       />
       <Tabs.Screen
         name="search"
         options={{
           title: "Search",
           tabBarIcon: ({ color }) => <Search size={22} color={color} />,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -42,6 +44,7 @@ export default function TabLayout() {
         options={{
           title: "Bookings",
           tabBarIcon: ({ color }) => <BookOpen size={22} color={color} />,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -49,6 +52,7 @@ export default function TabLayout() {
         options={{
           title: "Notifications",
           tabBarIcon: ({ color }) => <Bell size={22} color={color} />,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -56,6 +60,7 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => <User size={22} color={color} />,
+          headerShown: false,
         }}
       />
     </Tabs>

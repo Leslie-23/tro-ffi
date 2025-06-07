@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -37,70 +38,72 @@ export default function BookingsScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Your Bookings</Text>
+    <SafeAreaView edges={["top"]} style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Your Bookings</Text>
 
-        <View style={styles.tabContainer}>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "upcoming" && styles.activeTab]}
-            onPress={() => setActiveTab("upcoming")}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "upcoming" && styles.activeTabText,
-              ]}
+          <View style={styles.tabContainer}>
+            <TouchableOpacity
+              style={[styles.tab, activeTab === "upcoming" && styles.activeTab]}
+              onPress={() => setActiveTab("upcoming")}
             >
-              Upcoming
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  styles.tabText,
+                  activeTab === "upcoming" && styles.activeTabText,
+                ]}
+              >
+                Upcoming
+              </Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "past" && styles.activeTab]}
-            onPress={() => setActiveTab("past")}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "past" && styles.activeTabText,
-              ]}
+            <TouchableOpacity
+              style={[styles.tab, activeTab === "past" && styles.activeTab]}
+              onPress={() => setActiveTab("past")}
             >
-              Past
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  styles.tabText,
+                  activeTab === "past" && styles.activeTabText,
+                ]}
+              >
+                Past
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
+
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Text style={styles.loadingText}>Loading bookings...</Text>
+          </View>
+        ) : filteredBookings.length > 0 ? (
+          <FlatList
+            data={filteredBookings}
+            renderItem={renderBookingItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContent}
+          />
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyTitle}>No {activeTab} bookings</Text>
+            <Text style={styles.emptyText}>
+              {activeTab === "upcoming"
+                ? "You don't have any upcoming bookings. Search for routes to book a trip."
+                : "You haven't completed any trips yet."}
+            </Text>
+            <TouchableOpacity
+              style={styles.newBookingButton}
+              onPress={() => router.push("/search")}
+            >
+              <Text style={styles.newBookingText}>Find a Route</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
-
-      {isLoading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={styles.loadingText}>Loading bookings...</Text>
-        </View>
-      ) : filteredBookings.length > 0 ? (
-        <FlatList
-          data={filteredBookings}
-          renderItem={renderBookingItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContent}
-        />
-      ) : (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyTitle}>No {activeTab} bookings</Text>
-          <Text style={styles.emptyText}>
-            {activeTab === "upcoming"
-              ? "You don't have any upcoming bookings. Search for routes to book a trip."
-              : "You haven't completed any trips yet."}
-          </Text>
-          <TouchableOpacity
-            style={styles.newBookingButton}
-            onPress={() => router.push("/search")}
-          >
-            <Text style={styles.newBookingText}>Find a Route</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -184,5 +187,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.white,
+  },
+  safeArea: {
+    flex: 1,
   },
 });

@@ -20,11 +20,13 @@ import React, { useEffect, useState } from "react";
 import {
   Alert,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function BookingDetailsScreen() {
   const { id } = useLocalSearchParams();
@@ -131,171 +133,178 @@ export default function BookingDetailsScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    >
-      <Stack.Screen
-        options={{
-          title: "Booking Details",
-          headerTitleStyle: { color: colors.text },
-          headerStyle: { backgroundColor: colors.background },
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={handleShareBooking}
-              style={styles.shareButton}
-            >
-              <Share2 size={20} color={colors.text} />
-            </TouchableOpacity>
-          ),
-        }}
-      />
-
-      <View style={styles.statusContainer}>
-        <View
-          style={[
-            styles.statusIndicator,
-            { backgroundColor: getStatusColor(booking.status) },
-          ]}
+    <SafeAreaView edges={["top"]} style={styles.safeArea}>
+      <StatusBar barStyle={"default"} />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+      >
+        <Stack.Screen
+          options={{
+            title: "Booking Details",
+            headerTitleStyle: { color: colors.text },
+            headerStyle: { backgroundColor: colors.background },
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={handleShareBooking}
+                style={styles.shareButton}
+              >
+                <Share2 size={20} color={colors.text} />
+              </TouchableOpacity>
+            ),
+          }}
         />
-        <Text style={styles.statusText}>
-          {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-        </Text>
-      </View>
 
-      <Card style={styles.bookingCard}>
-        <Text style={styles.bookingId}>Booking ID: {booking.id}</Text>
-
-        <View style={styles.routeInfo}>
-          <View style={styles.locationContainer}>
-            <View style={styles.locationDot} />
-            <View style={styles.locationLine} />
-            <View style={styles.locationDot} />
-          </View>
-
-          <View style={styles.locationDetails}>
-            <View style={styles.location}>
-              <Text style={styles.locationName}>
-                {booking.pickupLocation.name}
-              </Text>
-              <Text style={styles.locationAddress}>
-                {booking.pickupLocation.address}
-              </Text>
-            </View>
-
-            <View style={styles.location}>
-              <Text style={styles.locationName}>
-                {booking.dropoffLocation.name}
-              </Text>
-              <Text style={styles.locationAddress}>
-                {booking.dropoffLocation.address}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.detailsContainer}>
-          <View style={styles.detailItem}>
-            <Calendar size={16} color={colors.primary} />
-            <Text style={styles.detailText}>
-              {formatDate(booking.pickupTime)}
-            </Text>
-          </View>
-
-          <View style={styles.detailItem}>
-            <Clock size={16} color={colors.primary} />
-            <Text style={styles.detailText}>
-              {formatTime(booking.pickupTime)}
-            </Text>
-          </View>
-
-          <View style={styles.detailItem}>
-            <Users size={16} color={colors.primary} />
-            <Text style={styles.detailText}>
-              {booking.passengerCount} {booking.isGroupBooking ? "(Group)" : ""}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.fareContainer}>
-          <Text style={styles.fareLabel}>Total Fare</Text>
-          <Text style={styles.fareAmount}>KES {booking.fare}</Text>
-        </View>
-
-        <View style={styles.paymentInfo}>
-          <View style={styles.paymentMethod}>
-            <DollarSign size={16} color={colors.inactive} />
-            <Text style={styles.paymentMethodText}>
-              {booking.paymentMethod === "mobile_money"
-                ? "Mobile Money"
-                : booking.paymentMethod === "card"
-                ? "Card"
-                : "Cash"}
-            </Text>
-          </View>
-
-          <Text
+        <View style={styles.statusContainer}>
+          <View
             style={[
-              styles.paymentStatus,
-              {
-                color:
-                  booking.paymentStatus === "paid"
-                    ? colors.success
-                    : booking.paymentStatus === "failed"
-                    ? colors.error
-                    : colors.warning,
-              },
+              styles.statusIndicator,
+              { backgroundColor: getStatusColor(booking.status) },
             ]}
-          >
-            {booking.paymentStatus.toUpperCase()}
+          />
+          <Text style={styles.statusText}>
+            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
           </Text>
         </View>
-      </Card>
 
-      {isActiveBooking && bus && (
-        <BusTracker
-          bus={bus}
-          destination={booking.pickupLocation}
-          estimatedArrival={estimatedArrival.toISOString()}
-        />
-      )}
+        <Card style={styles.bookingCard}>
+          <Text style={styles.bookingId}>Booking ID: {booking.id}</Text>
 
-      {isActiveBooking && driver && (
-        <DriverInfo
-          driver={driver}
-          onCall={() => {
-            /* Handle call */
-          }}
-          onMessage={() => {
-            /* Handle message */
-          }}
-        />
-      )}
+          <View style={styles.routeInfo}>
+            <View style={styles.locationContainer}>
+              <View style={styles.locationDot} />
+              <View style={styles.locationLine} />
+              <View style={styles.locationDot} />
+            </View>
 
-      {isActiveBooking && <SafetyFeatures />}
+            <View style={styles.locationDetails}>
+              <View style={styles.location}>
+                <Text style={styles.locationName}>
+                  {booking.pickupLocation.name}
+                </Text>
+                <Text style={styles.locationAddress}>
+                  {booking.pickupLocation.address}
+                </Text>
+              </View>
 
-      {isActiveBooking && (
-        <Button
-          title="Cancel Booking"
-          onPress={handleCancelBooking}
-          variant="outline"
-          leftIcon={<X size={20} color={colors.error} />}
-          textStyle={{ color: colors.error }}
-          style={styles.cancelButton}
-          isLoading={isLoading}
-          fullWidth
-        />
-      )}
+              <View style={styles.location}>
+                <Text style={styles.locationName}>
+                  {booking.dropoffLocation.name}
+                </Text>
+                <Text style={styles.locationAddress}>
+                  {booking.dropoffLocation.address}
+                </Text>
+              </View>
+            </View>
+          </View>
 
-      {booking.status === "completed" && (
-        <Button
-          title="Rate Your Trip"
-          onPress={() => router.push(`/rate-trip/${booking.id}`)}
-          style={styles.rateButton}
-          fullWidth
-        />
-      )}
-    </ScrollView>
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailItem}>
+              <Calendar size={16} color={colors.primary} />
+              <Text style={styles.detailText}>
+                {formatDate(booking.pickupTime)}
+              </Text>
+            </View>
+
+            <View style={styles.detailItem}>
+              <Clock size={16} color={colors.primary} />
+              <Text style={styles.detailText}>
+                {formatTime(booking.pickupTime)}
+              </Text>
+            </View>
+
+            <View style={styles.detailItem}>
+              <Users size={16} color={colors.primary} />
+              <Text style={styles.detailText}>
+                {booking.passengerCount}{" "}
+                {booking.isGroupBooking ? "(Group)" : ""}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.fareContainer}>
+            <Text style={styles.fareLabel}>Total Fare</Text>
+            <Text style={styles.fareAmount}>GHS {booking.fare}</Text>
+          </View>
+
+          <View style={styles.paymentInfo}>
+            <View style={styles.paymentMethod}>
+              <DollarSign size={16} color={colors.inactive} />
+              <Text style={styles.paymentMethodText}>
+                {booking.paymentMethod === "mobile_money"
+                  ? "Mobile Money"
+                  : booking.paymentMethod === "card"
+                  ? "Card"
+                  : "Cash"}
+              </Text>
+            </View>
+
+            <Text
+              style={[
+                styles.paymentStatus,
+                {
+                  color:
+                    booking.paymentStatus === "paid"
+                      ? colors.success
+                      : booking.paymentStatus === "failed"
+                      ? colors.error
+                      : colors.warning,
+                },
+              ]}
+            >
+              {booking.paymentStatus.toUpperCase()}
+            </Text>
+          </View>
+        </Card>
+
+        {isActiveBooking && bus && (
+          <BusTracker
+            bus={bus}
+            destination={booking.pickupLocation}
+            estimatedArrival={estimatedArrival.toISOString()}
+          />
+        )}
+
+        {isActiveBooking && driver && (
+          <DriverInfo
+            driver={driver}
+            onCall={() => {
+              /* Handle call */
+            }}
+            onMessage={() => {
+              /* Handle message */
+            }}
+          />
+        )}
+
+        {isActiveBooking && <SafetyFeatures />}
+
+        {isActiveBooking && (
+          <Button
+            title="Cancel Booking"
+            onPress={handleCancelBooking}
+            variant="outline"
+            leftIcon={<X size={20} color={colors.error} />}
+            textStyle={{ color: colors.error }}
+            style={styles.cancelButton}
+            isLoading={isLoading}
+            fullWidth
+          />
+        )}
+
+        {booking.status === "completed" && (
+          <Button
+            title="Rate Your Trip"
+            onPress={
+              () => {}
+              // router.push(`/rate-trip/${booking.id}`)
+            }
+            style={styles.rateButton}
+            fullWidth
+          />
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -439,5 +448,8 @@ const styles = StyleSheet.create({
   rateButton: {
     marginTop: 8,
     marginBottom: 24,
+  },
+  safeArea: {
+    flex: 1,
   },
 });

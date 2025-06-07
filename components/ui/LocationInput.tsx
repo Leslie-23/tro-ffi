@@ -1,17 +1,17 @@
 import { colors } from "@/constants/colors";
 import { useRouteStore } from "@/store/route-store";
 import { Location } from "@/types";
-import { MapPin, X } from "lucide-react-native";
+import { MapPin, Search, X } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Modal,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Input } from "./Input";
 
 interface LocationInputProps {
   label: string;
@@ -103,13 +103,16 @@ export const LocationInput: React.FC<LocationInputProps> = ({
               </TouchableOpacity>
             </View>
 
-            <Input
-              placeholder="Search locations..."
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              leftIcon={<MapPin size={20} color={colors.primary} />}
-              containerStyle={styles.searchInput}
-            />
+            <View style={styles.searchInputContainer}>
+              <Search size={20} color={colors.grey} style={styles.searchIcon} />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search locations..."
+                placeholderTextColor={colors.grey}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+            </View>
 
             {searchQuery.trim() === "" && (
               <Text style={styles.popularText}>Popular Locations</Text>
@@ -196,8 +199,22 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.text,
   },
+  searchInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.card,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
   searchInput: {
-    marginBottom: 8,
+    flex: 1,
+    height: 44,
+    color: colors.text,
+    fontSize: 16,
   },
   popularText: {
     fontSize: 16,

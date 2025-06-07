@@ -23,7 +23,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({ route, onPress }) => {
   };
 
   const formatCurrency = (amount: number) => {
-    return `KES ${amount}`;
+    return `GHS ${amount}`;
   };
 
   return (
