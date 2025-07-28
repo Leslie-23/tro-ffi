@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import pool from "../config/database.js";
 import { v4 as uuidv4 } from "uuid";
@@ -45,8 +45,8 @@ export const register = async (req, res) => {
       });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
+    const salt = await bcryptjs.genSalt(10);
+    const passwordHash = await bcryptjs.hash(password, salt);
 
     // Fixed parameter order and count
     const [result] = await connection.query(
@@ -143,7 +143,7 @@ export const login = async (req, res) => {
     }
 
     const user = users[0];
-    const validPass = await bcrypt.compare(password, user.password);
+    const validPass = await bcryptjs.compare(password, user.password);
 
     if (!validPass) {
       return res.status(401).json({
