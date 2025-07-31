@@ -1,4 +1,3 @@
-import { colors } from "@/constants/colors";
 import { Calendar, Clock, X } from "lucide-react-native";
 import React, { useRef, useState } from "react";
 import {
@@ -9,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { colors } from "../../constants/Colors";
 import { Button } from "./Button";
 
 interface DateTimePickerProps {

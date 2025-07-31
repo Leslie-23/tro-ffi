@@ -1,10 +1,10 @@
-import { colors } from "@/constants/colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { colors } from "../constants/Colors";
 
 import { ErrorBoundary } from "./error-boundary";
 

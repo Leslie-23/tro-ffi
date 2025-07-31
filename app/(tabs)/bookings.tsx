@@ -1,5 +1,4 @@
 import { BookingCard } from "@/components/ui/BookingCard";
-import { colors } from "@/constants/colors";
 import { useBookingStore } from "@/store/booking-store";
 import { Booking } from "@/types";
 import { useRouter } from "expo-router";
@@ -13,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { colors } from "../../constants/Colors";
 
 export default function BookingsScreen() {
   const router = useRouter();

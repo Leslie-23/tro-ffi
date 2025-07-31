@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { PaymentMethodSelector } from "@/components/ui/PaymentMethodSelector";
-import { colors } from "@/constants/colors";
 import { useBookingStore } from "@/store/booking-store";
 import { PaymentMethod } from "@/types";
 import { Stack, useRouter } from "expo-router";
@@ -15,6 +14,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { colors } from "../constants/Colors";
 
 export default function BookingConfirmationScreen() {
   const router = useRouter();

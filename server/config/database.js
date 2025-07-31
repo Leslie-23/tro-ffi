@@ -7,11 +7,12 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
+  port: Number(process.env.DB_PORT) || 8889,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  acquireTimeout: 30000,
-  connectTimeout: 10000,
+  // acquireTimeout: 30000,
+  // connectTimeout: 10000,
 });
 
 (async () => {

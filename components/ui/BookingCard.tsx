@@ -1,8 +1,8 @@
-import { colors } from "@/constants/colors";
 import { Booking } from "@/types";
 import { Calendar } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors } from "../../constants/Colors";
 import { Card } from "./Card";
 
 interface BookingCardProps {

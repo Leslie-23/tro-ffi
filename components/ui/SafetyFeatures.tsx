@@ -1,4 +1,3 @@
-import { colors } from "@/constants/colors";
 import {
   AlertTriangle,
   Bell,
@@ -9,6 +8,7 @@ import {
 } from "lucide-react-native";
 import React, { useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors } from "../../constants/Colors";
 import { Button } from "./Button";
 
 export const SafetyFeatures: React.FC = () => {

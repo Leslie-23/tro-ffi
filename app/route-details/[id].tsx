@@ -1,7 +1,6 @@
 import { BusCard } from "@/components/ui/BusCard";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { colors } from "@/constants/colors";
 import { mockBuses } from "@/mocks/data";
 import { useBookingStore } from "@/store/booking-store";
 import { useRouteStore } from "@/store/route-store";
@@ -25,6 +24,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { colors } from "../../constants/Colors";
 
 export default function RouteDetailsScreen() {
   const { id } = useLocalSearchParams();

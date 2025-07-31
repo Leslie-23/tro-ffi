@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { DriverInfo } from "@/components/ui/DriverInfo";
 import { SafetyFeatures } from "@/components/ui/SafetyFeatures";
-import { colors } from "@/constants/colors";
 import { mockBuses, mockDrivers } from "@/mocks/data";
 import { useBookingStore } from "@/store/booking-store";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Calendar, CheckCircle, Clock, Users } from "lucide-react-native";
 import React, { useEffect } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { colors } from "../../constants/Colors";
 
 export default function BookingSuccessScreen() {
   const { id } = useLocalSearchParams();

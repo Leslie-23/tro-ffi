@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/Card";
-import { colors } from "@/constants/colors";
 import { useAuthStore } from "@/store/auth-store";
 import { useRouter } from "expo-router";
 import {
@@ -24,6 +23,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { colors } from "../../constants/Colors";
 
 export default function ProfileScreen() {
   const router = useRouter();

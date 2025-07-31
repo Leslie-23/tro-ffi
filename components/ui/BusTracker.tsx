@@ -1,8 +1,8 @@
-import { colors } from "@/constants/colors";
 import { Bus, Location } from "@/types";
 import { MapPin } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { colors } from "../../constants/Colors";
 import { Card } from "./Card";
 
 interface BusTrackerProps {

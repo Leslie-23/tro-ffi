@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { DriverInfo } from "@/components/ui/DriverInfo";
 import { SafetyFeatures } from "@/components/ui/SafetyFeatures";
-import { colors } from "@/constants/colors";
 import { mockBuses, mockDrivers } from "@/mocks/data";
 import { useBookingStore } from "@/store/booking-store";
 import { Booking } from "@/types";
@@ -27,6 +26,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { colors } from "../../constants/Colors";
 
 export default function BookingDetailsScreen() {
   const { id } = useLocalSearchParams();

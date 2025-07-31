@@ -3,7 +3,6 @@ import { DateTimePicker } from "@/components/ui/DateTimePicker";
 import { LocationInput } from "@/components/ui/LocationInput";
 import { PassengerCounter } from "@/components/ui/PassengerCounter";
 import { RouteCard } from "@/components/ui/RouteCard";
-import { colors } from "@/constants/colors";
 import { useBookingStore } from "@/store/booking-store";
 import { useRouteStore } from "@/store/route-store";
 import { Route } from "@/types";
@@ -23,6 +22,7 @@ import {
   View,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { colors } from "../../constants/Colors";
 
 export default function SearchScreen() {
   const router = useRouter();

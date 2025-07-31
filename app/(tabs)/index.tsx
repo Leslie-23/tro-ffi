@@ -1,7 +1,6 @@
 import { BusCard } from "@/components/ui/BusCard";
 import { RouteCard } from "@/components/ui/RouteCard";
 import { SafetyFeatures } from "@/components/ui/SafetyFeatures";
-import { colors } from "@/constants/colors";
 import { mockBuses } from "@/mocks/data";
 import { useAuthStore } from "@/store/auth-store";
 import { useBookingStore } from "@/store/booking-store";
@@ -19,6 +18,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { colors } from "../../constants/Colors";
 
 export default function HomeScreen() {
   const router = useRouter();

@@ -1,4 +1,3 @@
-import { colors } from "@/constants/colors";
 import { mockPaymentMethods } from "@/mocks/data";
 import { PaymentMethod } from "@/types";
 import { Check, CreditCard, DollarSign, X } from "lucide-react-native";
@@ -11,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { colors } from "../../constants/Colors";
 import { Button } from "./Button";
 
 interface PaymentMethodSelectorProps {

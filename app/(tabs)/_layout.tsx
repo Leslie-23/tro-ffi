@@ -1,7 +1,7 @@
-import { colors } from "@/constants/colors";
 import { Tabs } from "expo-router";
 import { Bell, BookOpen, Home, Search, User } from "lucide-react-native";
 import React from "react";
+import { colors } from "../../constants/Colors";
 
 export default function TabLayout() {
   return (

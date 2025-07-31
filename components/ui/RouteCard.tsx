@@ -1,8 +1,8 @@
-import { colors } from "@/constants/colors";
 import { Route } from "@/types";
 import { Clock, MapPin, Users } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors } from "../../constants/Colors";
 import { Card } from "./Card";
 
 interface RouteCardProps {

@@ -1,9 +1,9 @@
-import { colors } from "@/constants/colors";
 import { mockUsers } from "@/mocks/data";
 import { Driver } from "@/types";
 import { MessageCircle, Phone, Star } from "lucide-react-native";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors } from "../../constants/Colors";
 import { Card } from "./Card";
 
 interface DriverInfoProps {

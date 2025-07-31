@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import cookieParser from "cookie-parser";
 import express from "express";
 import session from "express-session";
-import cookieParser from "cookie-parser";
 import mysql from "mysql2/promise";
 import passport from "passport";
 import "./config/passport.js"; // Import passport configuration
@@ -14,6 +14,10 @@ import busRoutes from "./routes/bus.routes.js";
 
 const app = express();
 app.use(express.json());
+
+import { swaggerSpec, swaggerUi } from "./swagger.js"; // adjust path
+// Swagger route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Session configuration
 app.use(cookieParser());

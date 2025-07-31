@@ -1,4 +1,3 @@
-import { colors } from "@/constants/colors";
 import { mockNotifications } from "@/mocks/data";
 import { Notification } from "@/types";
 import { useRouter } from "expo-router";
@@ -13,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { colors } from "../../constants/Colors";
 
 export default function NotificationsScreen() {
   const router = useRouter();

@@ -1,4 +1,3 @@
-import { colors } from "@/constants/colors";
 import React from "react";
 import {
   ActivityIndicator,
@@ -9,6 +8,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
+import { colors } from "../../constants/Colors";
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;

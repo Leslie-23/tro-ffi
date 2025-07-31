@@ -1,4 +1,3 @@
-import { colors } from "@/constants/colors";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import {
@@ -11,6 +10,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { colors } from "../../constants/Colors";
 
 interface InputProps extends TextInputProps {
   label?: string;

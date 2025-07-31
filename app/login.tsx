@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { colors } from "@/constants/colors";
 import { useAuthStore } from "@/store/auth-store";
 import { useRouter } from "expo-router";
 import { ChevronRight, Lock, Phone } from "lucide-react-native";
@@ -15,6 +14,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { colors } from "../constants/Colors";
 
 export default function LoginScreen() {
   const router = useRouter();
