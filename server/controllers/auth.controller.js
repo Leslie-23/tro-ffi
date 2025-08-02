@@ -1,7 +1,7 @@
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import pool from "../config/database.js";
 import { v4 as uuidv4 } from "uuid";
+import pool from "../config/database.js";
 
 const UNIQUE_CONSTRAINT_REGEX = {
   email: /for key '.*(email|users_email_unique).*'/i,
@@ -126,13 +126,13 @@ function getResolutionMessage(field) {
 
 export const login = async (req, res) => {
   try {
-    const { identifier, password } = req.body;
+    const { email, password } = req.body;
 
     const [users] = await pool.query(
       `SELECT * FROM users 
        WHERE email = ? OR username = ? OR phone = ?
        LIMIT 1`,
-      [identifier, identifier, identifier]
+      [email, email, email]
     );
 
     if (!users.length) {

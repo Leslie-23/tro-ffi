@@ -58,7 +58,7 @@ export const validateRegister = (req, res, next) => {
 
 export const validateLogin = (req, res, next) => {
   const schema = Joi.object({
-    identifier: Joi.string().required().messages({
+    email: Joi.string().required().messages({
       "string.empty": "Email or username is required",
     }),
     password: Joi.string().required().messages({

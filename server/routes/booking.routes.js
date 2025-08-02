@@ -2,6 +2,7 @@ import express from "express";
 import {
   cancelBookingController,
   createBookingController,
+  getAllBookingsController,
   getBookingByIdController,
   getUserBookingsController,
   updateBookingController,
@@ -133,7 +134,7 @@ router.get("/bookings/:id", authenticate, getBookingByIdController);
  *         description: Booking not found
  */
 
-router.patch("/bookings/:id/cancel", authenticate, cancelBookingController);
+router.patch("/bookings/cancel/:id", authenticate, cancelBookingController);
 /**
  * @swagger
  * /bookings/{id}:
@@ -173,6 +174,22 @@ router.patch("/bookings/:id/cancel", authenticate, cancelBookingController);
  *       404:
  *         description: Booking not found
  */
-router.put("/bookings/:id", authenticate, updateBookingController);
+router.put("/bookings/update/:id", authenticate, updateBookingController);
+
+/**
+ * @swagger
+ * /api/bookings:
+ *   get:
+ *     summary: Get all bookings
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all bookings
+ *       401:
+ *         description: Unauthorized
+ */
+router.get("/bookings", authenticate, getAllBookingsController);
 
 export default router;

@@ -1,8 +1,6 @@
 import Bus from "../models/Bus.js";
-import * as Operator from "../models/Operator.js";
-import {} from "../models/Operator.js";
-import * as Booking from "../models/Booking.js";
 import Driver from "../models/Driver.js";
+import {} from "../models/Operator.js";
 
 export const getAllBuses = async (req, res) => {
   try {

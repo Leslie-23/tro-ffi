@@ -24,12 +24,14 @@ export default function LoginScreen() {
   const [formErrors, setFormErrors] = useState({
     phone: "",
     password: "",
+    email: "",
   });
 
   const validateForm = () => {
     const errors = {
       phone: "",
       password: "",
+      email: "",
     };
 
     if (!phone) {
@@ -95,6 +97,15 @@ export default function LoginScreen() {
             keyboardType="phone-pad"
             leftIcon={<Phone size={20} color={colors.primary} />}
             error={formErrors.phone}
+          />
+          <Input
+            label="Email"
+            placeholder="Enter your email"
+            value={formErrors.email || ""}
+            onChangeText={() => {}}
+            keyboardType="email-address"
+            leftIcon={<Lock size={20} color={colors.primary} />}
+            error={formErrors.email}
           />
 
           <Input

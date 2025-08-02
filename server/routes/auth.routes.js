@@ -9,7 +9,7 @@ const authRoutes = express.Router();
 
 /**
  * @swagger
- * /auth/register:
+ * /api/auth/register:
  *   post:
  *     summary: Register a new user
  *     tags: [Auth]
@@ -23,6 +23,8 @@ const authRoutes = express.Router();
  *               - username
  *               - email
  *               - password
+ *               - name
+ *               - phone
  *             properties:
  *               username:
  *                 type: string
@@ -44,7 +46,7 @@ const authRoutes = express.Router();
 authRoutes.post("/register", validateRegister, register);
 /**
  * @swagger
- * /auth/login:
+ * /api/auth/login:
  *   post:
  *     summary: Log in an existing user
  *     tags: [Auth]

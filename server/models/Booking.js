@@ -1,5 +1,5 @@
-import pool from "../config/database.js";
 import { v4 as uuidv4 } from "uuid";
+import pool from "../config/database.js";
 
 // Create a new booking
 const createBooking = async (bookingData) => {
@@ -111,10 +111,16 @@ const cancelBookingById = async (bookingId) => {
   return result;
 };
 
+const findAllBookings = async () => {
+  const [rows] = await pool.query("SELECT * FROM bookings");
+  return rows;
+};
+
 // Export all functions
 export {
-  createBooking,
-  findBookingsByUser,
-  findBookingById,
   cancelBookingById,
+  createBooking,
+  findAllBookings,
+  findBookingById,
+  findBookingsByUser,
 };

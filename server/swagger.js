@@ -6,7 +6,7 @@ const options = {
     openapi: "3.0.0",
     info: {
       title: "Tro-Ffi API Docs",
-      version: "1.0.0",
+      version: "1.0.1",
       description: "Swagger docs for Tro-Ffi API",
     },
     servers: [{ url: "http://localhost:8000" }],

@@ -19,7 +19,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /buses:
+ * /api/buses:
  *   get:
  *     summary: Get all buses
  *     tags: [Buses]

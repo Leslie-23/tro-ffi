@@ -62,7 +62,7 @@ export default function HomeScreen() {
           <View style={styles.header}>
             <View>
               <Text style={styles.greeting}>
-                Hello, {user?.name?.split(" ")[0] || "Guest"}
+                Hello, {user?.name?.split(" ")[0] || "Leslie"}
               </Text>
               <Text style={styles.subGreeting}>Where are you going today?</Text>
             </View>

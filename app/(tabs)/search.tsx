@@ -107,7 +107,7 @@ export default function SearchScreen() {
   };
 
   const handleDateConfirm = (date: Date) => {
-    setSelectedDate(date);
+    setSelectedDate(date.toISOString());
     hideDatePicker();
   };
 
@@ -146,7 +146,7 @@ export default function SearchScreen() {
                   handleLocationSelect(location, "pickup")
                 }
                 error={errors.pickup}
-                onSubmitEditing={() => Keyboard.dismiss()}
+                // onSubmitEditing={() => Keyboard.dismiss()}
               />
 
               <LocationInput
@@ -157,14 +157,15 @@ export default function SearchScreen() {
                   handleLocationSelect(location, "dropoff")
                 }
                 error={errors.dropoff}
-                onSubmitEditing={() => Keyboard.dismiss()}
+                // onSubmitEditing={() => Keyboard.dismiss()}
               />
 
               <TouchableOpacity onPress={showDatePicker}>
                 <DateTimePicker
                   label="Departure Time"
                   value={selectedDate}
-                  editable={false}
+                  // editable={false}
+                  onChange={() => {}}
                   error={errors.date}
                 />
               </TouchableOpacity>

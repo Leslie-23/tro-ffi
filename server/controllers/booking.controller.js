@@ -1,11 +1,11 @@
+import pool from "../config/database.js";
 import {
   createBooking,
-  findBookingsByUser,
+  findAllBookings,
   findBookingById,
-  cancelBookingById,
+  findBookingsByUser,
   updateBooking,
 } from "../models/Booking.js";
-import pool from "../config/database.js";
 const connection = await pool.getConnection();
 // Create a new booking
 export const createBookingController = async (req, res) => {
@@ -54,10 +54,11 @@ export const createBookingController = async (req, res) => {
     // 2. Update bus occupancy
     await connection.query(
       `UPDATE buses 
-       SET current_occupancy = ? 
-       WHERE id = ?`,
+      SET current_occupancy = ? 
+      WHERE id = ?`,
       [newOccupancy, bus_id]
     );
+    const availableSeats = bus[0].capacity - newOccupancy;
     const bookingId = await createBooking({
       user_id,
       route_id,
@@ -74,6 +75,7 @@ export const createBookingController = async (req, res) => {
       message: "Booking created successfully",
       booking_id: bookingId,
       bus_occupancy: newOccupancy,
+      available_seats: availableSeats,
 
       ...req.body,
     });
@@ -272,5 +274,18 @@ export const cancelBookingController = async (req, res) => {
     });
   } finally {
     connection.release();
+  }
+};
+
+export const getAllBookingsController = async (req, res) => {
+  try {
+    const bookings = await findAllBookings();
+    return res.status(200).json({
+      count: bookings.length,
+      bookings,
+    });
+  } catch (error) {
+    console.error("Fetching all bookings failed:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
