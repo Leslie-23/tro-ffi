@@ -1,5 +1,6 @@
+import { colors } from "@/constants/Colors";
 import { Calendar, Clock, X } from "lucide-react-native";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ScrollView,
@@ -8,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { colors } from "../../constants/Colors";
 import { Button } from "./Button";
 
 interface DateTimePickerProps {
@@ -32,11 +32,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   const [selectedDate, setSelectedDate] = useState<Date>(
     value ? new Date(value) : new Date()
   );
-  const scrollViewRef = useRef<ScrollView>(null);
-
-  const handleInputFocus = () => {
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-  };
   const [selectedTime, setSelectedTime] = useState<string>(
     value
       ? new Date(value).toLocaleTimeString([], {
@@ -136,9 +131,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         animationType="slide"
         transparent={true}
         onRequestClose={() => setModalVisible(false)}
-        onShow={() => {
-          scrollViewRef.current?.scrollToEnd({ animated: true });
-        }}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -242,22 +234,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           </View>
         </View>
       </Modal>
-
-      {/* <DateTimePickerModal
-  isVisible={modalVisible}
-  mode="datetime"
-  date={selectedDate}
-  minimumDate={minDate}
-  maximumDate={maxDate}
-  onConfirm={(date) => {
-    setSelectedDate(date);
-    onChange(date.toISOString());
-    setModalVisible(false);
-  }}
-  onCancel={() => setModalVisible(false)}
-  display="spinner" // Or "default" based on preference
-  minuteInterval={15}
-/> */}
     </View>
   );
 };

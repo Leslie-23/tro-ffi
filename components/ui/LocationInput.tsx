@@ -1,3 +1,4 @@
+import { colors } from "@/constants/Colors";
 import { useRouteStore } from "@/store/route-store";
 import { Location } from "@/types";
 import { MapPin, Search, X } from "lucide-react-native";
@@ -11,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { colors } from "../../constants/Colors";
 
 interface LocationInputProps {
   label: string;

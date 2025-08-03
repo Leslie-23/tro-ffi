@@ -140,6 +140,63 @@ const Driver = {
     );
     return result.affectedRows > 0;
   },
+  // };
+
+  // const Driver = {
+  getById: async (id) => {
+    const [rows] = await db.query("SELECT * FROM drivers WHERE id = ?", [id]);
+    return rows[0] || null;
+  },
+
+  getAll: async () => {
+    const [rows] = await db.query("SELECT * FROM drivers");
+    return rows;
+  },
+
+  update: async (id, data) => {
+    const [result] = await db.query("UPDATE drivers SET ? WHERE id = ?", [
+      data,
+      id,
+    ]);
+    return result.affectedRows > 0;
+  },
+
+  getMyBuses: async (driverId) => {
+    const [rows] = await db.query("SELECT * FROM buses WHERE driver_id = ?", [
+      driverId,
+    ]);
+    return rows;
+  },
+
+  getMyBookings: async (driverId) => {
+    const [rows] = await db.query(
+      `SELECT b.*, u.name as passenger_name, r.name as route_name
+       FROM bookings b
+       JOIN buses bu ON b.bus_id = bu.id
+       JOIN users u ON b.user_id = u.id
+       JOIN routes r ON b.route_id = r.id
+       WHERE bu.driver_id = ?`,
+      [driverId]
+    );
+    return rows;
+  },
+
+  updateStatus: async (id, status) => {
+    const [result] = await db.query(
+      "UPDATE drivers SET status = ? WHERE id = ?",
+      [status, id]
+    );
+    return result.affectedRows > 0;
+  },
+
+  verifyDriver: async (id) => {
+    const [result] = await db.query(
+      "UPDATE drivers SET verification_status = 'verified' WHERE id = ?",
+      [id]
+    );
+    return result.affectedRows > 0;
+  },
 };
 
+// export default Driver;
 export default Driver;

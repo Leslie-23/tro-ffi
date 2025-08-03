@@ -110,7 +110,7 @@ export const SafetyFeatures: React.FC = () => {
               />
               <Button
                 title="Cancel"
-                variant="outline"
+                // variant="outline"
                 onPress={() => setSosPanelVisible(false)}
                 style={styles.sosButtonInModal}
                 textStyle={{ color: colors.white }}
@@ -145,15 +145,15 @@ export const SafetyFeatures: React.FC = () => {
                 handleCall(emergencyContact);
                 setAlertVisible(false);
               }}
-              style={styles.sosButtonInModal}
+              style={styles.alertButtonInModal}
               leftIcon={<Phone size={20} color={colors.white} />}
               fullWidth
             />
             <Button
               title="Cancel"
-              variant="outline"
+              // variant="outline"
               onPress={() => setAlertVisible(false)}
-              style={styles.sosButtonInModal}
+              style={styles.alertButtonInModal}
               textStyle={{ color: colors.white }}
               leftIcon={<X size={20} color={colors.white} />}
               fullWidth
@@ -328,6 +328,17 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     display: "flex",
     backgroundColor: colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    marginBottom: 8,
+  },
+  alertButtonInModal: {
+    width: 300,
+    height: 60,
+    borderRadius: 30,
+    display: "flex",
+    backgroundColor: colors.warning,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",

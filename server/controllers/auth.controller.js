@@ -94,7 +94,7 @@ export const register = async (req, res) => {
     await connection.rollback();
     console.error("Registration error:", err);
 
-    // Handle MySQL errors
+    // Handling MySQL errors
     if (err.code === "ER_DUP_ENTRY") {
       const field =
         Object.entries(UNIQUE_CONSTRAINT_REGEX).find(([_, regex]) =>

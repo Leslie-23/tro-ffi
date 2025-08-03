@@ -11,9 +11,15 @@ import "./config/passport.js"; // Import passport configuration
 import authRoutes from "./routes/auth.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
 import busRoutes from "./routes/bus.routes.js";
+import driverRoutes from "./routes/driver.routes.js";
+import operatorRoutes from "./routes/operator.routes.js";
+import routeRoutes from "./routes/route.routes.js";
 
 const app = express();
 app.use(express.json());
+
+import morgan from "morgan";
+app.use(morgan("dev"));
 
 import { swaggerSpec, swaggerUi } from "./swagger.js"; // adjust path
 // Swagger route
@@ -71,46 +77,22 @@ app.use("/api", bookingRoutes);
 // bus routes
 app.use("/api/buses", busRoutes);
 
-// Routes API
-app.get("/api/routes", async (req, res) => {
-  try {
-    const [rows] = await pool.query(`
-      SELECT r.*, 
-        sl.name AS start_location_name,
-        el.name AS end_location_name
-      FROM routes r
-      JOIN locations sl ON r.start_location_id = sl.id
-      JOIN locations el ON r.end_location_id = el.id
-      ORDER BY r.popularity DESC
-      LIMIT 10
-    `);
+// operator routes
+app.use("/api/operator", operatorRoutes);
 
-    res.json({ count: rows.length, data: rows });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-app.get("/api/routes/all", async (req, res) => {
-  try {
-    const [rows] = await pool.query(`
-      SELECT r.*, 
-        sl.name AS start_location_name,
-        el.name AS end_location_name
-      FROM routes r
-      JOIN locations sl ON r.start_location_id = sl.id
-      JOIN locations el ON r.end_location_id = el.id
-      ORDER BY r.popularity DESC
-      
-    `);
-    res.json({ count: rows.length, data: rows });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// driver routes
+app.use("/api/driver", driverRoutes);
+
+// route routes
+app.use("/api/routes", routeRoutes);
 
 app.get("/", async (req, res) => {
   // res.send("hello");
   res.json({ message: "API is running - entry point" });
+});
+app.get("/api", async (req, res) => {
+  // res.send("hello");
+  res.json({ message: "API on v1" });
 });
 // Start server
 const PORT = process.env.PORT || 8000;
