@@ -1,5 +1,15 @@
-import * as React from "react";
-export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({
+import React from "react";
+
+export function Label({
   className = "",
   ...props
-}) => <label className={`block ${className}`} {...props} />;
+}: React.LabelHTMLAttributes<HTMLLabelElement>) {
+  return (
+    <label
+      className={`block text-sm font-medium text-gray-700 ${className}`}
+      {...props}
+    />
+  );
+}
+
+export default Label;
