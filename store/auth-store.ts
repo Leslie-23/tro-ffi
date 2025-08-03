@@ -1,8 +1,9 @@
-import { currentUser } from '@/mocks/data';
-import { User } from '@/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { currentUser } from "@/mocks/data";
+import { User } from "@/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axiosInstance from "axios";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface AuthState {
   user: User | null;
@@ -11,6 +12,8 @@ interface AuthState {
   error: string | null;
   login: (phone: string, password: string) => Promise<void>;
   logout: () => void;
+  register: (phone: string, password: string) => Promise<void>;
+
   updateUser: (userData: Partial<User>) => void;
 }
 
@@ -25,20 +28,40 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null });
         try {
           // Simulate API call
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
           // In a real app, this would be an API call to verify credentials
-          if (phone === '+254712345678' && password === 'password') {
+          if (phone === "+254712345678" && password === "password") {
             set({ user: currentUser, isAuthenticated: true, isLoading: false });
           } else {
-            set({ error: 'Invalid credentials', isLoading: false });
+            set({ error: "Invalid credentials", isLoading: false });
           }
         } catch (error) {
-          set({ error: 'Login failed. Please try again.', isLoading: false });
+          set({ error: "Login failed. Please try again.", isLoading: false });
         }
       },
       logout: () => {
         set({ user: null, isAuthenticated: false });
+      },
+      register: async (phone: string, password: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          const res = await axiosInstance.post("/auth/register", {
+            phone,
+            password,
+          });
+          const token = res.data.token;
+          axiosInstance.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${token}`;
+          set({ user: res.data.user, isLoading: false });
+        } catch (err: any) {
+          set({
+            error: err.response?.data?.error || "Registration failed",
+            isLoading: false,
+          });
+          throw err;
+        }
       },
       updateUser: (userData) => {
         set((state) => ({
@@ -47,7 +70,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: 'auth-storage',
+      name: "auth-storage",
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { ChevronRight, Lock, Phone } from "lucide-react-native";
 import React, { useState } from "react";
 import {
+  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -18,7 +19,7 @@ import { colors } from "../constants/Colors";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { login, isLoading, error } = useAuthStore();
+  const { login, register, isLoading, error } = useAuthStore();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [formErrors, setFormErrors] = useState({
@@ -56,8 +57,30 @@ export default function LoginScreen() {
     try {
       await login(phone, password);
       router.replace("/");
-    } catch (error) {
-      console.error("Login error:", error);
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        // If user not found, prompt for signup
+        Alert.alert(
+          "User not found",
+          "Do you want to create an account with this phone number?",
+          [
+            { text: "Cancel", style: "cancel" },
+            {
+              text: "Register",
+              onPress: async () => {
+                try {
+                  await register(phone, password);
+                  router.replace("/");
+                } catch (e) {
+                  console.error("Registration error:", e);
+                }
+              },
+            },
+          ]
+        );
+      } else {
+        console.error("Login error:", err);
+      }
     }
   };
 
@@ -71,7 +94,7 @@ export default function LoginScreen() {
         <View style={styles.header}>
           <Image
             source={{
-              uri: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+              uri: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?...",
             }}
             style={styles.headerImage}
           />
@@ -98,15 +121,6 @@ export default function LoginScreen() {
             leftIcon={<Phone size={20} color={colors.primary} />}
             error={formErrors.phone}
           />
-          <Input
-            label="Email"
-            placeholder="Enter your email"
-            value={formErrors.email || ""}
-            onChangeText={() => {}}
-            keyboardType="email-address"
-            leftIcon={<Lock size={20} color={colors.primary} />}
-            error={formErrors.email}
-          />
 
           <Input
             label="Password"
@@ -118,10 +132,7 @@ export default function LoginScreen() {
             error={formErrors.password}
           />
 
-          <TouchableOpacity
-            style={styles.forgotPassword}
-            // onPress={() => router.push("/forgot-password")}
-          >
+          <TouchableOpacity style={styles.forgotPassword}>
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </TouchableOpacity>
 
@@ -139,20 +150,12 @@ export default function LoginScreen() {
             <View style={styles.dividerLine} />
           </View>
 
-          <TouchableOpacity
-            style={styles.registerButton}
-            // onPress={() => router.push("/register")}
-          >
+          <TouchableOpacity style={styles.registerButton}>
             <Text style={styles.registerText}>Create an Account</Text>
             <ChevronRight size={20} color={colors.primary} />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.ussdButton}
-            onPress={() => {
-              /* Handle USSD login */
-            }}
-          >
+          <TouchableOpacity style={styles.ussdButton}>
             <Text style={styles.ussdText}>Login via USSD</Text>
             <Text style={styles.ussdCode}>*123#</Text>
           </TouchableOpacity>
@@ -163,13 +166,8 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-  },
+  container: { flex: 1, backgroundColor: colors.background },
+  scrollContent: { flexGrow: 1 },
   header: {
     height: 200,
     justifyContent: "flex-end",
@@ -197,14 +195,8 @@ const styles = StyleSheet.create({
     color: colors.white,
     marginBottom: 8,
   },
-  subtitle: {
-    fontSize: 16,
-    color: colors.white,
-  },
-  formContainer: {
-    flex: 1,
-    padding: 16,
-  },
+  subtitle: { fontSize: 16, color: colors.white },
+  formContainer: { flex: 1, padding: 16 },
   formTitle: {
     fontSize: 24,
     fontWeight: "bold",
@@ -217,31 +209,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
   },
-  errorText: {
-    color: colors.error,
-    fontSize: 14,
-  },
-  forgotPassword: {
-    alignSelf: "flex-end",
-    marginBottom: 24,
-  },
-  forgotPasswordText: {
-    fontSize: 14,
-    color: colors.primary,
-  },
-  loginButton: {
-    marginBottom: 24,
-  },
+  errorText: { color: colors.error, fontSize: 14 },
+  forgotPassword: { alignSelf: "flex-end", marginBottom: 24 },
+  forgotPasswordText: { fontSize: 14, color: colors.primary },
+  loginButton: { marginBottom: 24 },
   divider: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 24,
   },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: colors.border,
-  },
+  dividerLine: { flex: 1, height: 1, backgroundColor: colors.border },
   dividerText: {
     paddingHorizontal: 16,
     color: colors.inactive,
@@ -257,11 +234,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
   },
-  registerText: {
-    fontSize: 16,
-    color: colors.primary,
-    marginRight: 8,
-  },
+  registerText: { fontSize: 16, color: colors.primary, marginRight: 8 },
   ussdButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -270,14 +243,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     borderRadius: 8,
   },
-  ussdText: {
-    fontSize: 16,
-    color: colors.text,
-    marginRight: 8,
-  },
-  ussdCode: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: colors.primary,
-  },
+  ussdText: { fontSize: 16, color: colors.text, marginRight: 8 },
+  ussdCode: { fontSize: 16, fontWeight: "bold", color: colors.primary },
 });

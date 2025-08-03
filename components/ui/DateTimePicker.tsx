@@ -50,8 +50,11 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     });
   };
 
-  const formatDisplayTime = (time: string): string => {
-    return time;
+  const formatDisplayTime = (time: Date): string => {
+    return time.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   const handleConfirm = () => {
@@ -109,16 +112,18 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         onPress={() => setModalVisible(true)}
       >
         <Calendar size={20} color={colors.primary} style={styles.icon} />
+
         <View style={styles.textContainer}>
           <Text style={styles.label}>{label}</Text>
+
           <Text style={value ? styles.value : styles.placeholder}>
             {value
-              ? `${formatDisplayDate(new Date(value))} at ${formatDisplayTime(
-                  new Date(value).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
-                )}`
+              ? (() => {
+                  const dateObj = new Date(value);
+                  const displayDate = formatDisplayDate(dateObj);
+                  const displayTime = formatDisplayTime(dateObj);
+                  return `${displayDate} at ${displayTime}`;
+                })()
               : "Select date and time"}
           </Text>
         </View>
